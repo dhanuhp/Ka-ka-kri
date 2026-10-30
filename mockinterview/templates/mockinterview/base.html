@@ -11,7 +11,7 @@
 </head>
 <body>
   <aside class="sidebar">
-    <a class="brand" href="{% url 'dashboard' %}"><span class="brand-mark">P</span> PrepWise</a>
+    <a class="brand" href="{% if request.user.is_staff %}{% url 'admin_dashboard' %}{% else %}{% url 'dashboard' %}{% endif %}"><span class="brand-mark">P</span> PrepWise</a>
     <nav>
       {% if not request.user.is_staff %}<a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"><span>⌂</span>Overview</a>
       <a href="{% url 'interviews' %}" class="{% if 'interview' in request.resolver_match.url_name %}active{% endif %}"><span>▣</span>Practice Interviews</a>
@@ -26,7 +26,7 @@
       <a href="{% url 'candidate_selection' %}" class="{% if request.resolver_match.url_name == 'candidate_selection' %}active{% endif %}"><span>↗</span>Candidate Ranking</a>
       {% endif %}
     </nav>
-    <nav class="secondary-nav"><a href="{% url 'profile' %}">Profile</a><a href="{% url 'settings' %}">Settings</a>{% if request.user.is_staff %}<a href="{% url 'admin_dashboard' %}">Admin Dashboard</a><a href="{% url 'hosted_interviews' %}">Host Interviews</a><a href="{% url 'candidate_selection' %}">Candidate Selection</a>{% endif %}</nav>
+    {% if not request.user.is_staff %}<nav class="secondary-nav"><a href="{% url 'profile' %}">Profile</a><a href="{% url 'settings' %}">Settings</a></nav>{% endif %}
     <a class="sidebar-logout" href="{% url 'logout' %}"><span>↪</span> Log out</a>
     <div class="profile"><div class="avatar">{{ request.user.first_name|first|default:request.user.username|first|upper }}</div><div><strong>{{ request.user.get_full_name|default:request.user.username }}</strong><small>{{ request.user.email }}</small></div></div>
   </aside>

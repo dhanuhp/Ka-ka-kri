@@ -1,7 +1,7 @@
 {% extends 'mockinterview/base.html' %}
 {% block title %}Candidate Selection | PrepWise{% endblock %}
 {% block content %}
-<header class="topbar"><div><p class="eyebrow">AI-ASSISTED RECRUITING</p><h1>Candidate ranking</h1></div></header>
+<header class="topbar"><div><p class="eyebrow">AI-ASSISTED RECRUITING</p><h1>Candidate ranking</h1></div><a class="button logout-button" href="{% url 'logout' %}">↪ Log out</a></header>
 <section class="content">
   <div class="interview-intro"><div><span class="pill">REVIEW SUPPORT</span><h2>Evidence-based shortlist</h2><p>Candidates are ranked from persisted interview scores, skill coverage, and response efficiency. A recruiter makes the final hiring decision.</p></div></div>
   <div class="ranking-controls"><label>Sort candidates<select id="candidateSort"><option value="rank">Ranking score</option><option value="overall">Overall accuracy</option><option value="speed">Response efficiency</option><option value="name">Candidate name</option></select></label><span>{{ candidates|length }} candidate{{ candidates|length|pluralize }}</span></div>

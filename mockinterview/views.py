@@ -472,7 +472,8 @@ def hosted_interviews(request):
             messages.success(request, f'Interview room published. Access code: {session.access_code}')
             return redirect('hosted_interviews')
     sessions = HostedInterview.objects.filter(host=request.user).order_by('-created_at')
-    return render(request, 'mockinterview/hosted_interviews.html', {'sessions': sessions})
+    questions = Question.objects.all().order_by('topic', 'difficulty')
+    return render(request, 'mockinterview/hosted_interviews.html', {'sessions': sessions, 'questions': questions})
 
 
 @login_required
