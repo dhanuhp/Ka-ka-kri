@@ -1,0 +1,30 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Administrator Login | PrepWise</title>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body class="auth-body">
+  <div class="auth-card admin-auth-card">
+    <a class="brand" href="/"><span class="brand-mark">P</span> PrepWise</a>
+    <span class="pill">ADMINISTRATOR ACCESS</span>
+    <h1>Admin sign in</h1>
+    <p>Manage interview rooms, candidates, and performance reports.</p>
+    {% if messages %}{% for message in messages %}<div class="form-message">{{ message }}</div>{% endfor %}{% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <label>Administrator username
+        <input name="username" autocomplete="username" required autofocus>
+      </label>
+      <label>Password
+        <input name="password" type="password" autocomplete="current-password" required>
+      </label>
+      <button class="button primary full">Sign in to admin console →</button>
+    </form>
+    <p class="auth-switch"><a href="{% url 'login' %}">Candidate sign in</a></p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,27 @@
+{% extends 'mockinterview/base.html' %}
+{% block content %}
+<header class="topbar"><div><p class="eyebrow">CANDIDATE DASHBOARD</p><h1>{% if request.user.first_name %}Welcome, {{ request.user.first_name }}{% else %}Welcome, {{ request.user.username }}{% endif %}</h1></div><div class="header-actions"><button class="icon-button">?</button><a class="button primary" href="{% url 'interviews' %}">Start interview <span>→</span></a></div></header>
+<section class="content">
+  <div class="welcome-banner"><div><span class="pill light">WEEKLY GOAL</span><h2>You're making great progress!</h2><p>Complete 2 more practice interviews to reach your weekly target.</p></div><div class="progress-ring"><span>3/5</span></div></div>
+  <div class="stat-grid">
+    <article class="stat-card"><div class="stat-icon purple">↗</div><p>Overall accuracy</p><h3>{{ accuracy }}%</h3><small class="positive">↑ 4.2% this month</small></article>
+    <article class="stat-card"><div class="stat-icon blue">✓</div><p>Interviews completed</p><h3>{{ completed }}</h3><small>Keep the momentum</small></article>
+    <article class="stat-card"><div class="stat-icon orange">◷</div><p>Average response time</p><h3>{{ avg_time }} min</h3><small class="positive">10% faster than last week</small></article>
+    <article class="stat-card"><div class="stat-icon green">⚡</div><p>Interview readiness</p><h3>{% if accuracy >= 70 %}Strong{% else %}Building{% endif %}</h3><small>Based on recent answers</small></article>
+  </div>
+  {% if hosted %}
+  <div class="section-heading"><div><h2>Hosted interview rooms</h2><p>Interviews scheduled by your administrator</p></div></div>
+  <div class="table-card hosted-list">{% for session in hosted %}<div class="table-row hosted-row"><div><strong>{{ session.title }}</strong><small>{{ session.scheduled_at|date:"M j, Y g:i A" }} · {{ session.level }} · {{ session.duration_minutes }} minutes</small></div><span class="status {{ session.status }}">{{ session.status }}</span><a href="{% url 'join_hosted_interview' session.id %}">Enter room →</a></div>{% endfor %}</div>
+  {% endif %}
+  <div class="section-heading"><div><h2>Continue practicing</h2><p>Your personalized interview plan</p></div><a href="{% url 'interviews' %}">View all →</a></div>
+  <div class="practice-grid">
+    <article class="practice-card"><div class="card-top coding"><span>CODING</span><b>Intermediate</b></div><h3>Data Structures & Algorithms</h3><p>Arrays, hash maps, stacks and trees</p><div class="meta"><span>◷ 45 min</span><span>5 questions</span></div><form action="{% url 'start_interview' %}" method="post">{% csrf_token %}<input type="hidden" name="title" value="Data Structures & Algorithms"><button>Continue practice →</button></form></article>
+    <article class="practice-card"><div class="card-top system"><span>SYSTEM DESIGN</span><b>Advanced</b></div><h3>Scalable System Design</h3><p>Architecture, trade-offs and APIs</p><div class="meta"><span>◷ 60 min</span><span>5 questions</span></div><form action="{% url 'start_interview' %}" method="post">{% csrf_token %}<input type="hidden" name="title" value="Scalable System Design"><button>Start practice →</button></form></article>
+    <article class="practice-card"><div class="card-top behavioral"><span>BEHAVIORAL</span><b>Core</b></div><h3>Behavioral & Leadership</h3><p>STAR stories and team scenarios</p><div class="meta"><span>◷ 30 min</span><span>5 questions</span></div><form action="{% url 'start_interview' %}" method="post">{% csrf_token %}<input type="hidden" name="title" value="Behavioral & Leadership"><button>Start practice →</button></form></article>
+  </div>
+  {% if interviews %}
+  <div class="section-heading recent"><div><h2>Recent activity</h2></div></div>
+  <div class="table-card">{% for interview in interviews %}<div class="table-row"><div><strong>{{ interview.title }}</strong><small>{{ interview.started_at|date:"M j, Y" }}</small></div><span class="status {{ interview.status }}">{{ interview.status }}</span><a href="{% if interview.status == 'completed' %}{% url 'results' interview.id %}{% else %}{% url 'take_interview' interview.id %}{% endif %}">View →</a></div>{% endfor %}</div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'mockinterview/base.html' %}
+{% block title %}Interview Results | PrepWise{% endblock %}
+{% block content %}
+<header class="topbar"><div><p class="eyebrow">INTERVIEW COMPLETE</p><h1>Your performance report</h1></div><a class="button primary" href="{% url 'recommendations' %}">View recommendations →</a></header>
+<section class="content">
+  <div class="results-hero"><div><span class="pill light">OVERALL SCORE</span><h2>{{ score }}%</h2><p>{% if score >= 70 %}Strong performance. Keep sharpening your weak points.{% else %}A solid starting point. Targeted practice will help you improve quickly.{% endif %}</p></div><div class="score-ring" style="--score:{{ score }}"><span>{{ score }}</span></div></div>
+  <div class="stat-grid three"><article class="stat-card"><p>Overall accuracy</p><h3>{{ score }}%</h3></article><article class="stat-card"><p>Avg. response time</p><h3>{{ avg_time }} min</h3></article><article class="stat-card"><p>Questions evaluated</p><h3>{{ responses.count }}</h3></article></div>
+  <div class="recommendation-grid score-analysis">
+    <section class="plan-card"><h2>Performance by topic</h2>{% for item in topics %}<div class="mastery-row"><span>{{ item.topic }}</span><div><i style="width:{{ item.score }}%"></i></div><b>{{ item.score }}%</b></div>{% endfor %}</section>
+    <section class="resources-card"><h2>Question-type analysis</h2>{% for item in question_types %}<div class="mastery-row"><span>{{ item.kind|title }}</span><div><i style="width:{{ item.score }}%"></i></div><b>{{ item.score }}%</b></div>{% endfor %}{% if weakest %}<div class="weak-point"><span>Priority improvement area</span><strong>{{ weakest.topic }} — {{ weakest.score }}%</strong></div>{% endif %}</section>
+  </div>
+  <div class="section-heading"><div><h2>Question-by-question feedback</h2><p>See what worked and where to improve</p></div></div>
+  <div class="feedback-list">{% for response in responses %}<article class="feedback-card"><div class="feedback-top"><span class="type {{ response.question.kind }}">{{ response.question.kind }}</span><strong>{{ response.score|floatformat:0 }}%</strong></div><h3>{{ response.question.prompt }}</h3><p>{{ response.qualitative_feedback }}</p><div class="response-time">Response time: {{ response.time_seconds }} seconds</div></article>{% empty %}<div class="empty-state">Submit answers to see detailed feedback.</div>{% endfor %}</div>
+  <div class="completion-actions"><a class="button secondary" href="{% url 'interviews' %}">Practice again</a>{% if interview.status != 'completed' %}<a class="button primary" href="{% url 'complete_interview' interview.id %}">Finish interview</a>{% endif %}</div>
+</section>
+{% endblock %}

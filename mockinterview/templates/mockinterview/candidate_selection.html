@@ -1,0 +1,17 @@
+{% extends 'mockinterview/base.html' %}
+{% block title %}Candidate Selection | PrepWise{% endblock %}
+{% block content %}
+<header class="topbar"><div><p class="eyebrow">AI-ASSISTED RECRUITING</p><h1>Candidate ranking</h1></div></header>
+<section class="content">
+  <div class="interview-intro"><div><span class="pill">REVIEW SUPPORT</span><h2>Evidence-based shortlist</h2><p>Candidates are ranked from persisted interview scores, skill coverage, and response efficiency. A recruiter makes the final hiring decision.</p></div></div>
+  <div class="ranking-controls"><label>Sort candidates<select id="candidateSort"><option value="rank">Ranking score</option><option value="overall">Overall accuracy</option><option value="speed">Response efficiency</option><option value="name">Candidate name</option></select></label><span>{{ candidates|length }} candidate{{ candidates|length|pluralize }}</span></div>
+  <div class="table-card candidate-table" id="candidateTable">{% for candidate in candidates %}<article class="candidate-row" data-rank="{{ candidate.interview_score }}" data-overall="{{ candidate.overall }}" data-speed="{{ candidate.speed_score }}" data-name="{{ candidate.user.get_full_name|default:candidate.user.username }}">
+    <div class="candidate-name"><div class="avatar">{{ candidate.user.first_name|first|default:candidate.user.username|first|upper }}</div><div><strong>{{ candidate.user.get_full_name|default:candidate.user.username }}</strong><small>{{ candidate.profile.target_role|default:"Candidate" }} · {{ candidate.interviews }} completed interview{{ candidate.interviews|pluralize }}</small></div></div>
+    <div class="candidate-score"><span>Rank #{{ candidate.rank }}</span><strong>{{ candidate.interview_score }}%</strong></div>
+    <div class="candidate-skills">{% for skill in candidate.skills %}<span>{{ skill.name }} <b>{{ skill.score }}%</b></span>{% empty %}<span>No skill scores yet</span>{% endfor %}</div>
+    <div class="candidate-actions"><span>Overall: {{ candidate.overall }}%</span><span>Speed: {{ candidate.speed_score }}%</span></div>
+    <details class="candidate-analysis"><summary>View strength & weakness analysis</summary><div class="analysis-grid"><div><strong>Strengths</strong>{% for item in candidate.strengths %}<p class="strength-text">{{ item.topic }} — {{ item.score }}%</p>{% empty %}<p class="muted">No topic currently reaches 70%.</p>{% endfor %}</div><div><strong>Areas to improve</strong>{% for item in candidate.weaknesses %}<p class="weakness-text">{{ item.topic }} — {{ item.score }}%</p>{% empty %}<p class="muted">No significant weak area identified.</p>{% endfor %}</div></div></details>
+  </article>{% empty %}<div class="empty-state">No candidates have submitted interview responses yet.</div>{% endfor %}</div>
+  <div class="callout"><div><strong>Responsible hiring note</strong><p>Use these rankings to support—not replace—structured human review. Verify evidence, assess job requirements consistently, and document final decisions.</p></div></div>
+</section>
+{% endblock %}

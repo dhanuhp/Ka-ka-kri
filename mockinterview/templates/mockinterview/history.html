@@ -1,0 +1,3 @@
+{% extends 'mockinterview/base.html' %}{% block content %}
+<header class="topbar"><div><p class="eyebrow">YOUR JOURNEY</p><h1>Interview history</h1></div></header>
+<section class="content"><div class="table-card">{% for interview in interviews %}<div class="table-row"><div><strong>{{ interview.title }}</strong><small>{{ interview.started_at|date:"M j, Y g:i A" }}</small></div><span class="status {{ interview.status }}">{{ interview.status }}</span><a href="{% if interview.status == 'completed' %}{% url 'results' interview.id %}{% else %}{% url 'take_interview' interview.id %}{% endif %}">Open →</a></div>{% empty %}<div class="empty-state">No interviews yet. <a href="{% url 'interviews' %}">Start your first interview.</a></div>{% endfor %}</div></section>{% endblock %}

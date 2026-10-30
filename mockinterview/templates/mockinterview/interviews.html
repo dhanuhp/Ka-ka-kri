@@ -1,0 +1,10 @@
+{% extends 'mockinterview/base.html' %}
+{% block title %}Practice Interviews | PrepWise{% endblock %}
+{% block content %}
+<header class="topbar"><div><p class="eyebrow">PRACTICE LIBRARY</p><h1>Choose your next challenge</h1></div></header>
+<section class="content">
+  <div class="interview-intro"><div><span class="pill">AI-POWERED SIMULATION</span><h2>Interview room</h2><p>Timed questions, instant evaluation, and actionable feedback tailored to your performance.</p></div><form action="{% url 'start_interview' %}" method="post" class="setup-form">{% csrf_token %}<label>Difficulty<select name="level">{% for level in levels %}<option>{{ level }}</option>{% endfor %}</select></label><button class="button primary">Start full interview →</button></form></div>
+  <h2 class="library-title">Question library</h2>
+  <div class="library-grid">{% for question in questions %}<article class="library-card"><div class="library-head"><span class="type {{ question.kind }}">{{ question.kind }}</span><span>{{ question.get_difficulty_display|default:"Level" }} {{ question.difficulty }}/4</span></div><h3>{{ question.topic }}</h3><p>{{ question.prompt }}</p><div class="meta"><span>◷ {{ question.time_limit }} min</span></div></article>{% endfor %}</div>
+</section>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'mockinterview/base.html' %}
+{% block title %}Interview Room | PrepWise{% endblock %}
+{% block content %}
+<header class="topbar interview-topbar"><div><p class="eyebrow">{{ interview.title }}</p><h1>Technical interview</h1></div><div class="timer"><span>◷</span><strong id="timer">00:00</strong></div></header>
+<section class="interview-layout">
+  <div class="question-panel">
+    <div class="question-progress"><span>QUESTION {{ number }} OF {{ total }}</span><div><i style="width:{% widthratio number total 100 %}%"></i></div></div>
+    <div class="question-meta"><span class="type {{ question.kind }}">{{ question.kind }}</span><span>{{ question.topic }}</span></div>
+    <h2>{{ question.prompt }}</h2>
+    {% if question.context %}<p class="question-context">{{ question.context }}</p>{% endif %}
+    <form method="post" action="{% url 'submit_answer' interview.id %}" id="answer-form">
+      {% csrf_token %}
+      <input type="hidden" name="question_id" value="{{ question.id }}">
+      <input type="hidden" name="time_seconds" id="time_seconds" value="0">
+      {% if question.options %}
+      <fieldset class="mcq-options">
+        <legend>{% if question.kind == 'mcq' %}Choose one answer{% else %}Select your answer{% endif %}</legend>
+        {% for option in question.options %}
+        <label><input type="radio" name="answer" value="{{ option.label }}" required><span>{{ option.label }}</span><div>{{ option.text }}</div></label>
+        {% endfor %}
+      </fieldset>
+      {% else %}
+      <label for="answer">{% if question.kind == 'coding' %}Your approach & solution{% else %}Your answer{% endif %}</label>
+      {% if question.kind == 'coding' %}<textarea id="answer" name="answer" rows="12" placeholder="Explain your approach, algorithm, and complexity..."></textarea>{% else %}<textarea id="answer" name="answer" rows="10" placeholder="Structure your response clearly..."></textarea>{% endif %}
+      {% endif %}
+      <div class="answer-actions"><span id="saved-status">Autosaved locally</span><button class="button primary">Submit answer →</button></div>
+    </form>
+  </div>
+  <aside class="interview-side">
+    <h3>Interview guide</h3>
+    <div class="guide-item active"><span>1</span><div><strong>Understand</strong><small>Clarify assumptions and inputs</small></div></div>
+    <div class="guide-item"><span>2</span><div><strong>Plan</strong><small>Explain your approach first</small></div></div>
+    <div class="guide-item"><span>3</span><div><strong>Solve</strong><small>Implement and test edge cases</small></div></div>
+    <div class="guide-item"><span>4</span><div><strong>Evaluate</strong><small>Discuss time and space complexity</small></div></div>
+    <div class="tip"><b>Quick tip</b><p>Think out loud. Interviewers value your reasoning and communication as much as the final answer.</p></div>
+  </aside>
+</section>
+{% endblock %}

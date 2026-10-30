@@ -1,0 +1,13 @@
+{% extends 'mockinterview/base.html' %}
+{% block title %}Recommendations | PrepWise{% endblock %}
+{% block content %}
+<header class="topbar"><div><p class="eyebrow">PERSONALIZED LEARNING</p><h1>Your improvement plan</h1></div></header>
+<section class="content">
+  <div class="recommendation-hero"><div><span class="pill light">PRIORITY FOCUS</span><h2>{{ weakest.topic }}</h2><p>Your current mastery is {{ weakest.score }}%. This plan is designed to close that gap efficiently.</p></div><div class="focus-score">{{ weakest.score }}%</div></div>
+  <div class="recommendation-grid">
+    <section class="plan-card"><span class="number-label">01</span><h2>{{ plan.0 }}</h2><p>{{ plan.1 }}</p><h3>Your study schedule</h3><ul><li><b>Day 1–2</b><span>Review core concepts and solve guided examples</span></li><li><b>Day 3–4</b><span>Solve 8–10 problems without time pressure</span></li><li><b>Day 5–6</b><span>Complete timed problem sets and mock interviews</span></li><li><b>Day 7</b><span>Review mistakes and retake a focused simulation</span></li></ul></section>
+    <section class="resources-card"><span class="number-label">02</span><h2>Curated resources</h2>{% for resource in plan.2 %}<a href="#" class="resource"><div>▶</div><span><strong>{{ resource }}</strong><small>Recommended learning resource</small></span><b>→</b></a>{% endfor %}<h3>Topic mastery</h3>{% for item in mastery %}<div class="mastery-row"><span>{{ item.topic }}</span><div><i style="width:{{ item.score }}%"></i></div><b>{{ item.score }}%</b></div>{% empty %}<p class="muted">Complete an interview to build topic mastery.</p>{% endfor %}</section>
+  </div>
+  <div class="callout"><div><strong>Ready to put the plan into action?</strong><p>Practice a focused interview and track your progress.</p></div><form action="{% url 'start_interview' %}" method="post">{% csrf_token %}<button class="button primary">Start focused practice →</button></form></div>
+</section>
+{% endblock %}
